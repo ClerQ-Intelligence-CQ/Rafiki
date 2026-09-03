@@ -4,7 +4,7 @@
 
 A research framework for edge-native digital twinning on constrained hardware.
 
-- license: MIT
+- license: Apache-2.0
 - language: Rust
 - target: 4GB RAM / standard CPU / no GPU
 - status: research in progress
