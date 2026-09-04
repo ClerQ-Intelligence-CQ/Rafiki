@@ -1,0 +1,19 @@
+[package]
+name = "rafiki-pacha"
+version.workspace = true
+edition.workspace = true
+authors.workspace = true
+license.workspace = true
+description = "Rafiki Pacha: twin state engine, public re-anchor of the Penemue living aggregate"
+
+[dependencies]
+serde = { workspace = true }
+serde_json = { workspace = true }
+thiserror = { workspace = true }
+rafiki-tambua = { path = "../tambua" }
+
+[dev-dependencies]
+rafiki-sae = { path = "../sae" }
+rafiki-spe = { path = "../spe" }
+rafiki-fikiri = { path = "../fikiri" }
+rafiki-tambua = { path = "../tambua" }

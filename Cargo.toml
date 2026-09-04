@@ -8,6 +8,7 @@ members = [
     "engines/tse",
     "engines/fikiri",
     "engines/tambua",
+    "engines/pacha",
 ]
 
 [workspace.package]
