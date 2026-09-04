@@ -22,11 +22,18 @@ release, APK via EAS internal distribution.
   system by default.
 - Export: CSV + JSON via expo-sharing / StorageAccessFramework;
   PDF summary later (print pipeline, same as course HTMLs).
-- Data source v1: local synthetic generator mirroring the engine
-  math (same seeds, same regimes as the Rust benches) so the app is
-  testable with zero backend. v2 bridge options, in order: on-device
-  REST loopback to a Rust core, then UniFFI bindings. No decision
-  needed until dev/test mode is done.
+- Data source v1: the REAL engine crates compiled on-device, fed
+  by a synthetic sensor stream (same seeds and regimes as the Rust
+  benches). No mock engines, no reimplemented math: dev mode runs
+  Rafiki itself and checks its outputs against the same gates as the
+  repo benches (windows, silence, fire, staleness, bytes). If dev
+  mode disagrees with `cargo bench`, the binding layer is guilty
+  until proven innocent.
+- Binding route, in order: (1) uniffi-bindgen-react-native (TS
+  bindings over JSI, least boilerplate); fallback (2) Expo Modules
+  with a C-ABI FFI shim around the engine crates. WASM is out
+  (Hermes/JSC ship no WASM runtime). Real sensor permissions come
+  only after dev mode proves the engines on-device.
 
 ## 2. Information architecture: 5 tabs, 150+ tracked items
 
@@ -88,13 +95,14 @@ literal color. Toggle in header, persisted, system default.
 ## 6. Milestones (in order)
 
 - M1: scaffold (router, theme, 5 empty tabs, search shell). No data.
-- M2: synthetic data layer (seeded regimes matching Rust benches).
+- M2: synthetic sensor feed (seeded regimes matching Rust benches)
+  into on-device engine bindings; parity check vs `cargo bench`.
 - M3: ACQUIRE + PROCESS tabs with pulses, sparklines, browser.
 - M4: LEARN tab (gauges, sorted stability, shift demo).
 - M5: RECOGNIZE tab (feed, detail, explainer) + dev/test run log.
 - M6: BECOME tab (twin card, export CSV/JSON) + progress tracking.
 - M7: charts-over-runs, heatmap if cheap, EAS internal APK.
-- M8 (later): v2 bridge to real Rust core; store release track.
+- M8 (later): real sensor permissions; store release track.
 
 ## 7. Non-goals for now
 
