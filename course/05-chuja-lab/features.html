@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Rafiki course: feature map</title>
+<style>
+body{font-family:Georgia,serif;max-width:52em;margin:2em auto;padding:0 1em;line-height:1.7;color:#222}
+h1{font-family:Verdana,sans-serif}
+.fam{border:1px solid #999;border-radius:8px;padding:.8em;margin:.8em 0}
+.fam h2{margin:.2em 0;font-size:1.1em}
+.feat{display:inline-block;background:#eef;border:1px solid #99c;border-radius:4px;padding:.1em .5em;margin:.15em;font-family:monospace;font-size:.9em;cursor:help}
+img.logo{max-width:280px}
+footer{margin-top:2em;color:#555;font-size:.9em}
+@media print{.feat{border:1px solid #000}}
+</style>
+</head>
+<body>
+<img class="logo" src="../../assets/rafiki-logo.jpg" alt="Rafiki - a digital twin">
+<h1>Feature map: all 30 + 7</h1>
+<p>Hover any feature for what it measures. Four families plus meta, then the seven classes.</p>
+<div class="fam"><h2>Accel (10)</h2><div id="a"></div></div>
+<div class="fam"><h2>Mic envelope (9)</h2><div id="m"></div></div>
+<div class="fam"><h2>GPS + baro (6)</h2><div id="g"></div></div>
+<div class="fam"><h2>Screen (3)</h2><div id="s"></div></div>
+<div class="fam"><h2>Meta (2)</h2><div id="x"></div></div>
+<div class="fam"><h2>Classes (7)</h2><div id="c"></div></div>
+<footer>A ClerQ Intelligence research initiative. Built with Nama Labs proprietary AI infrastructure.</footer>
+<script>
+var F={
+a:[["mag_mean","average motion level"],["mag_var","spread, still vs moving"],["zero_crossing_rate","rhythm vs drift"],["dominant_band","which frequency wins"],["jerk_mean","average change rate"],["pitch","tilt forward/back"],["roll","tilt sideways"],["motion_energy","effort over window"],["peak_to_peak","swing size"],["periodicity","repetition score 0-1"]],
+m:[["env_mean","loudness level"],["env_std","loudness spread"],["peak","loudest moment"],["rise_time","attack shape"],["decay_time","release shape"],["transient_count","knocks per window"],["crest_factor","peak vs average"],["inter_transient_mean","spacing of knocks"],["impulsiveness","spikiness 0-2"]],
+g:[["displacement_rate","speed estimate"],["altitude_rate","climb rate"],["dwell_fraction","stillness share"],["heading_change_rate","path straightness"],["altitude_var","terrain roughness"],["quality","trust 0-1, weights all"]],
+s:[["off_fraction","screen-dark share"],["unlocks_per_hour","interaction rate"],["longest_off_s","longest dark stretch"]],
+x:[["stability_score","environment steadiness"],["signal_quality","aggregate trust"]],
+c:[["motion_state","stationary/walking/vehicular/irregular"],["rest_state","resting-still/active/uncertain"],["acoustic_env","quiet/moderate/loud/impulsive"],["transient_event","detected/none"],["terrain_class","coastal/highland/urban/indoor/unknown"],["device_context","pocket/table/hand"],["stability_band","stable/mixed/volatile"]]};
+Object.keys(F).forEach(function(k){
+  var box=document.getElementById(k);
+  F[k].forEach(function(p){
+    var s=document.createElement("span");s.className="feat";s.textContent=p[0];s.title=p[1];box.appendChild(s);
+  });
+});
+</script>
+</body>
+</html>

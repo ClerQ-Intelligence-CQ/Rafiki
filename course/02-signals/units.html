@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Rafiki course: signals 101</title>
+<style>
+body{font-family:Georgia,serif;max-width:46em;margin:2em auto;padding:0 1em;line-height:1.7;color:#222}
+h1{font-family:Verdana,sans-serif}
+input,button{font-size:1em;margin:.2em;padding:.3em .6em}
+canvas{border:1px solid #999;width:100%;height:140px}
+img.logo{max-width:280px}
+footer{margin-top:2em;color:#555;font-size:.9em}
+@media print{button,input{display:none}}
+</style>
+</head>
+<body>
+<img class="logo" src="../../assets/rafiki-logo.jpg" alt="Rafiki - a digital twin">
+<h1>Signals 101</h1>
+<h2>GPS accuracy to trust</h2>
+<p>Accuracy (m): <input id="acc" type="number" value="5" min="1" max="100">
+<button onclick="trust()">Convert</button> <span id="trustOut"></span></p>
+<h2>Pressure to altitude</h2>
+<p>Pressure (hPa): <input id="pres" type="number" value="1013" min="900" max="1100">
+<button onclick="alt()">Convert</button> <span id="altOut"></span></p>
+<h2>Noise on a resting accelerometer</h2>
+<p>Noise level: <input id="nz" type="range" min="0" max="100" value="20"> <span id="nzOut"></span></p>
+<canvas id="cv" width="600" height="140"></canvas>
+<p id="stats"></p>
+<footer>A ClerQ Intelligence research initiative. Built with Nama Labs proprietary AI infrastructure.</footer>
+<script>
+function trust(){var a=parseFloat(document.getElementById("acc").value)||5;
+  var c=Math.max(0,Math.min(0.95,1-a/100));
+  document.getElementById("trustOut").textContent="confidence "+c.toFixed(2)+" (same formula Teka uses)";}
+function alt(){var p=parseFloat(document.getElementById("pres").value)||1013;
+  var a=44330*(1-Math.pow(p/1013.25,1/5.255));
+  document.getElementById("altOut").textContent=a.toFixed(1)+" m";}
+var seed=7;
+function rnd(){seed=(seed*6364136223846793005+1442695040888963407)%4294967296;return seed/4294967296;}
+function draw(){
+  var n=parseInt(document.getElementById("nz").value);
+  document.getElementById("nzOut").textContent=n+"%";
+  var cv=document.getElementById("cv"),ctx=cv.getContext("2d");
+  ctx.clearRect(0,0,600,140);ctx.beginPath();
+  var sum=0,sum2=0,N=200;
+  for(var i=0;i<N;i++){var v=9.81+(rnd()-0.5)*2*(n/100)*2;sum+=v;sum2+=v*v;
+    var y=70-(v-9.81)*40;ctx.lineTo(i*3,Math.max(0,Math.min(140,y)));}
+  ctx.stroke();
+  var mean=sum/N,sd=Math.sqrt(Math.max(0,sum2/N-mean*mean));
+  document.getElementById("stats").textContent="mean "+mean.toFixed(3)+" m/s2, std "+sd.toFixed(3)+" — raise the slider and watch std grow; downstream engines measure exactly this spread.";
+}
+document.getElementById("nz").oninput=draw;trust();alt();draw();
+</script>
+</body>
+</html>

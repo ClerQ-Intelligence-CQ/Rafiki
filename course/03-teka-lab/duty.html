@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Rafiki course: duty cycling</title>
+<style>
+body{font-family:Georgia,serif;max-width:46em;margin:2em auto;padding:0 1em;line-height:1.7;color:#222}
+h1{font-family:Verdana,sans-serif}
+button{font-size:1em;padding:.4em 1em;margin:.2em;cursor:pointer}
+#log{font-family:monospace;background:#f4f4f4;padding:1em;min-height:8em;white-space:pre-wrap}
+img.logo{max-width:280px}
+footer{margin-top:2em;color:#555;font-size:.9em}
+@media print{button{display:none}}
+</style>
+</head>
+<body>
+<img class="logo" src="../../assets/rafiki-logo.jpg" alt="Rafiki - a digital twin">
+<h1>Duty cycling, live model</h1>
+<p>Same rule as the engine: first sample active, then active only on
+moves over 0.05. Quiet stretches the interval to 500 ms, motion drops
+it to 50 ms.</p>
+<button onclick="feed(0)">Still sample</button>
+<button onclick="feed(1)">Walking sample</button>
+<button onclick="reset()">Reset</button>
+<div id="log"></div>
+<footer>A ClerQ Intelligence research initiative. Built with Nama Labs proprietary AI infrastructure.</footer>
+<script>
+var interval=500,last=null,count=0,log=[];
+function feed(m){
+  var v=m?1.5+Math.random()*0.4:Math.random()*0.03;
+  var active=(last===null)||Math.abs(v-last)>0.05;
+  last=v;count++;
+  interval=active?50:500;
+  log.push("sample "+count+": accel "+v.toFixed(2)+(active?" ACTIVE":" quiet")+" -> interval "+interval+"ms");
+  if(log.length>12)log.shift();
+  document.getElementById("log").textContent=log.join("\n");
+}
+function reset(){interval=500;last=null;count=0;log=[];document.getElementById("log").textContent="";}
+</script>
+</body>
+</html>

@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Rafiki course: twin inspector</title>
+<style>
+body{font-family:Georgia,serif;max-width:52em;margin:2em auto;padding:0 1em;line-height:1.7;color:#222}
+h1{font-family:Verdana,sans-serif}
+button{font-size:1em;padding:.4em 1em;margin:.2em;cursor:pointer}
+table{border-collapse:collapse;width:100%;font-size:.9em}
+td,th{border:1px solid #999;padding:.3em .5em;text-align:left}
+.stale{color:#a00;font-weight:bold}
+.ok{color:green}
+img.logo{max-width:280px}
+footer{margin-top:2em;color:#555;font-size:.9em}
+@media print{button{display:none}}
+</style>
+</head>
+<body>
+<img class="logo" src="../../assets/rafiki-logo.jpg" alt="Rafiki - a digital twin">
+<h1>Twin inspector</h1>
+<p>A 30-track twin: values drift, one stream can stall, one anomaly
+can open. Watch staleness and completeness respond.</p>
+<button onclick="step(0)">Normal step</button>
+<button onclick="step(1)">Spike all streams</button>
+<button onclick="toggleGps()">GPS: <span id="gs">ON</span></button>
+<button onclick="reset()">Reset</button>
+<table><tr><th>feature</th><th>value</th><th>stability</th><th>state</th></tr><tbody id="tb"></tbody></table>
+<p id="meta"></p>
+<footer>A ClerQ Intelligence research initiative. Built with Nama Labs proprietary AI infrastructure.</footer>
+<script>
+var feats=[],gpsOn=true,ts=0,anomaly=null;
+["accel.mag_var","mic.env_mean","gps.displacement_rate","screen.off_fraction"].forEach(function(n,i){
+  feats.push({name:n,value:[0.2,44,0.1,0.0][i],mean:[0.2,44,0.1,0.0][i],stab:0.8,updated:0});
+});
+function render(){
+  var tb=document.getElementById("tb");tb.innerHTML="";
+  var live=0;
+  feats.forEach(function(f){
+    var stale=(ts-f.updated)>40;
+    if(!stale)live++;
+    var tr=document.createElement("tr");
+    tr.innerHTML="<td>"+f.name+"</td><td>"+f.value.toFixed(2)+"</td><td>"+f.stab.toFixed(2)+
+      "</td><td class='"+(stale?"stale":"ok")+"'>"+(stale?"STALE":"live")+"</td>";
+    tb.appendChild(tr);
+  });
+  document.getElementById("meta").textContent=
+    "completeness "+(live/feats.length).toFixed(2)+" | twin ~5KB always | anomaly: "+(anomaly||"none");
+}
+function step(spike){
+  ts+=1;
+  feats.forEach(function(f){
+    if(f.name.indexOf("gps.")===0&&!gpsOn)return;
+    f.value=f.value*0.9+((f.name==="mic.env_mean"&&spike)?78:(f.name.indexOf("accel")===0&&spike?3:(f.name.indexOf("gps")===0&&spike?8:(f.name==="mic.env_mean"?44:0.1))))*0.1;
+    f.updated=ts;
+  });
+  if(spike)anomaly="convergence @t="+ts;else if(ts%50===0)anomaly=null;
+  render();
+}
+function toggleGps(){gpsOn=!gpsOn;document.getElementById("gs").textContent=gpsOn?"ON":"OFF";}
+function reset(){ts=0;anomaly=null;gpsOn=true;document.getElementById("gs").textContent="ON";
+  feats.forEach(function(f){f.updated=0;});render();}
+render();
+</script>
+</body>
+</html>

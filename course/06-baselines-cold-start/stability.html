@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Rafiki course: stability explorer</title>
+<style>
+body{font-family:Georgia,serif;max-width:46em;margin:2em auto;padding:0 1em;line-height:1.7;color:#222}
+h1{font-family:Verdana,sans-serif}
+input{width:90%}
+img.logo{max-width:280px}
+footer{margin-top:2em;color:#555;font-size:.9em}
+#out{font-size:1.3em;font-weight:bold}
+@media print{input{display:none}}
+</style>
+</head>
+<body>
+<img class="logo" src="../../assets/rafiki-logo.jpg" alt="Rafiki - a digital twin">
+<h1>Stability explorer: S = n / (n + 50*(1+CV))</h1>
+<p>Samples: <span id="nv">300</span><br><input id="n" type="range" min="1" max="2000" value="300"></p>
+<p>Spread (std): <span id="sv">2.0</span><br><input id="s" type="range" min="0" max="200" value="20"></p>
+<p>Mean: <span id="mv">50</span><br><input id="m" type="range" min="1" max="100" value="50"></p>
+<p id="out"></p>
+<p id="note"></p>
+<footer>A ClerQ Intelligence research initiative. Built with Nama Labs proprietary AI infrastructure.</footer>
+<script>
+function upd(){
+  var n=parseInt(document.getElementById("n").value),
+      sd=parseInt(document.getElementById("s").value)/10,
+      mean=parseInt(document.getElementById("m").value);
+  document.getElementById("nv").textContent=n;
+  document.getElementById("sv").textContent=sd.toFixed(1);
+  document.getElementById("mv").textContent=mean;
+  var cv=sd/(Math.abs(mean)+1e-6);
+  var S=n/(n+50*(1+cv));
+  document.getElementById("out").textContent="stability S = "+S.toFixed(3);
+  document.getElementById("note").textContent=
+    S<0.33?"low: this baseline whispers downstream.":S<0.66?"mid: gaining trust.":"high: this baseline speaks.";
+}
+["n","s","m"].forEach(function(id){document.getElementById(id).oninput=upd;});
+upd();
+</script>
+</body>
+</html>

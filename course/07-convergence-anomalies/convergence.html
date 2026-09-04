@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Rafiki course: convergence lab</title>
+<style>
+body{font-family:Georgia,serif;max-width:46em;margin:2em auto;padding:0 1em;line-height:1.7;color:#222}
+h1{font-family:Verdana,sans-serif}
+button{font-size:1em;padding:.4em 1em;margin:.2em;cursor:pointer}
+.strm{margin:.6em 0;padding:.6em;border:1px solid #999;border-radius:8px}
+.on{background:#fee}
+.off{opacity:.55}
+#verdict{font-size:1.3em;font-weight:bold;margin-top:1em}
+img.logo{max-width:280px}
+footer{margin-top:2em;color:#555;font-size:.9em}
+@media print{button{display:none}}
+</style>
+</head>
+<body>
+<img class="logo" src="../../assets/rafiki-logo.jpg" alt="Rafiki - a digital twin">
+<h1>Convergence lab</h1>
+<p>Toggle which streams are spiking. The engine fires only on two or
+more independent families. Mic alone, however long, stays silent.</p>
+<div class="strm" id="s-mic">MIC <button onclick="tog('mic')">spike: OFF</button></div>
+<div class="strm" id="s-accel">ACCEL <button onclick="tog('accel')">spike: OFF</button></div>
+<div class="strm" id="s-gps">GPS <button onclick="tog('gps')">spike: OFF</button></div>
+<div class="strm" id="s-screen">SCREEN <button onclick="tog('screen')">spike: OFF</button></div>
+<p id="verdict"></p>
+<footer>A ClerQ Intelligence research initiative. Built with Nama Labs proprietary AI infrastructure.</footer>
+<script>
+var on={mic:false,accel:false,gps:false,screen:false};
+function tog(k){
+  on[k]=!on[k];
+  var box=document.getElementById("s-"+k);
+  box.className="strm "+(on[k]?"on":"off");
+  box.querySelector("button").textContent="spike: "+(on[k]?"ON":"OFF");
+  var n=Object.keys(on).filter(function(x){return on[x];}).length;
+  document.getElementById("verdict").textContent=
+    n>=2?("FIRE: "+n+" independent families converging"):("silent ("+n+" famil"+(n===1?"y":"ies")+" deviating — noise, not signal)");
+}
+tog("mic");tog("mic");
+</script>
+</body>
+</html>

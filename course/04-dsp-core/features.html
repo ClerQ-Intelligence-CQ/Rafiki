@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Rafiki course: features live</title>
+<style>
+body{font-family:Georgia,serif;max-width:46em;margin:2em auto;padding:0 1em;line-height:1.7;color:#222}
+h1{font-family:Verdana,sans-serif}
+button{font-size:1em;padding:.4em 1em;margin:.2em;cursor:pointer}
+#out{font-family:monospace;background:#f4f4f4;padding:1em;white-space:pre-wrap;min-height:10em}
+img.logo{max-width:280px}
+footer{margin-top:2em;color:#555;font-size:.9em}
+@media print{button{display:none}}
+</style>
+</head>
+<body>
+<img class="logo" src="../../assets/rafiki-logo.jpg" alt="Rafiki - a digital twin">
+<h1>Features, live</h1>
+<p>Generates 64 samples of a trace, then computes mean, variance,
+zero-crossing rate, Goertzel band vote, and bounded autocorrelation.
+Same math as the engine, in the page.</p>
+<button onclick="run('still')">Still</button>
+<button onclick="run('walk')">Walking</button>
+<button onclick="run('drive')">Driving</button>
+<div id="out"></div>
+<footer>A ClerQ Intelligence research initiative. Built with Nama Labs proprietary AI infrastructure.</footer>
+<script>
+function trace(kind){
+  var xs=[],i,t;
+  for(i=0;i<64;i++){
+    if(kind==="still")t=9.81+(Math.random()-0.5)*0.06;
+    else if(kind==="walk")t=9.81+Math.sin(i*0.63)*1.2+(Math.random()-0.5)*0.2;
+    else t=9.81+Math.sin(i*1.9)*2.0+(Math.random()-0.5)*0.8;
+    xs.push(t);
+  }
+  return xs;
+}
+function stats(xs){
+  var n=xs.length,m=xs.reduce(function(a,b){return a+b;},0)/n;
+  var v=xs.reduce(function(a,b){return a+(b-m)*(b-m);},0)/n,zc=0,i;
+  for(i=1;i<n;i++)if((xs[i-1]-m)*(xs[i]-m)<0)zc++;
+  function goertzel(f){
+    var w=2*Math.PI*f,c=2*Math.cos(w),s0=0,s1=0,s2=0,j;
+    for(j=0;j<n;j++){s0=(xs[j]-m)+c*s1-s2;s2=s1;s1=s0;}
+    return Math.sqrt(Math.max(0,s1*s1+s2*s2-c*s1*s2));
+  }
+  var bands=[goertzel(0.05),goertzel(0.15),goertzel(0.35)];
+  var band=bands.indexOf(Math.max.apply(null,bands));
+  var best=0,lag;
+  for(lag=1;lag<=16;lag++){
+    var acc=0,k;for(k=0;k<n-lag;k++)acc+=(xs[k]-m)*(xs[k+lag]-m);
+    var r=acc/((n-lag)*Math.max(v,1e-9));if(r>best)best=r;
+  }
+  return "mean "+m.toFixed(3)+"  var "+v.toFixed(4)+"\nzero-crossing "+(zc/n).toFixed(3)+
+    "  band vote "+band+"  periodicity "+Math.max(0,Math.min(1,best)).toFixed(3);
+}
+function run(k){
+  document.getElementById("out").textContent=k.toUpperCase()+"\n"+stats(trace(k))+
+   "\n\nWalking should vote band 1 with high periodicity; still votes band 0 near zero.";
+}
+</script>
+</body>
+</html>
