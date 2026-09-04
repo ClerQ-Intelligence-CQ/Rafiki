@@ -13,7 +13,10 @@ use std::sync::{Arc, Mutex};
 struct Lcg(u64);
 impl Lcg {
     fn next(&mut self) -> f32 {
-        self.0 = self.0.wrapping_mul(6364136223846793005).wrapping_add(1442695040888963407);
+        self.0 = self
+            .0
+            .wrapping_mul(6364136223846793005)
+            .wrapping_add(1442695040888963407);
         ((self.0 >> 33) as f32) / (u32::MAX as f32)
     }
     fn range(&mut self, lo: f32, hi: f32) -> f32 {
@@ -100,8 +103,14 @@ fn main() {
     println!("stability tight vs wide: {s_tight:.3} vs {s_wide:.3}");
     println!("motion labels: {motions:?}");
     println!("footprint numerics: {numerics_half} at half, tracks: {tracks} at end");
-    println!("updates absorbed: {}, publishes: {}", tambua.updates_absorbed, tambua.publishes);
-    println!("throughput: {:.0} events/sec", total as f64 / elapsed.as_secs_f64().max(1e-9));
+    println!(
+        "updates absorbed: {}, publishes: {}",
+        tambua.updates_absorbed, tambua.publishes
+    );
+    println!(
+        "throughput: {:.0} events/sec",
+        total as f64 / elapsed.as_secs_f64().max(1e-9)
+    );
 
     if spe.windows_computed == 0 {
         failures.push("zero SPE windows".to_string());
@@ -110,7 +119,9 @@ fn main() {
         failures.push(format!("no adaptation: {mic_before:.2} -> {mic_after:.2}"));
     }
     if !(s_tight > s_wide) {
-        failures.push(format!("stability ordering wrong: {s_tight:.3} vs {s_wide:.3}"));
+        failures.push(format!(
+            "stability ordering wrong: {s_tight:.3} vs {s_wide:.3}"
+        ));
     }
     if tambua.numerics_len() != numerics_half {
         failures.push("numeric tracks grew with events".to_string());

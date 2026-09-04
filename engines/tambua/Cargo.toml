@@ -10,6 +10,7 @@ description = "Rafiki Tambua: baseline engine, public re-anchor of the Penemue b
 serde = { workspace = true }
 thiserror = { workspace = true }
 rafiki-spe = { path = "../spe" }
+rafiki-be = { path = "../be" }
 
 [dev-dependencies]
 rafiki-sae = { path = "../sae" }

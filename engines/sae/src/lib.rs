@@ -65,16 +65,29 @@ impl SensorData {
         SensorData::Accelerometer(Accelerometer { x, y, z })
     }
     pub fn gps(lat: f64, lng: f64, acc: f32) -> Self {
-        SensorData::Gps(GpsReading { latitude: lat, longitude: lng, accuracy_m: acc })
+        SensorData::Gps(GpsReading {
+            latitude: lat,
+            longitude: lng,
+            accuracy_m: acc,
+        })
     }
     pub fn baro(pressure: f32, temp: f32) -> Self {
-        SensorData::Barometer(Barometer { pressure_hpa: pressure, temperature_c: temp })
+        SensorData::Barometer(Barometer {
+            pressure_hpa: pressure,
+            temperature_c: temp,
+        })
     }
     pub fn mic(envelope: f32, peak: f32) -> Self {
-        SensorData::MicAmplitude(MicAmplitude { envelope_db: envelope, peak_hz: peak })
+        SensorData::MicAmplitude(MicAmplitude {
+            envelope_db: envelope,
+            peak_hz: peak,
+        })
     }
     pub fn screen(on: bool, brightness: u8) -> Self {
-        SensorData::ScreenState(ScreenState { on, brightness_pct: brightness })
+        SensorData::ScreenState(ScreenState {
+            on,
+            brightness_pct: brightness,
+        })
     }
     pub fn sensor_type(&self) -> SensorType {
         match self {
@@ -205,7 +218,10 @@ pub struct DutyCycler {
 
 impl DutyCycler {
     pub fn new(config: SamplingConfig) -> Self {
-        Self { current_interval_ms: config.max_quiet_interval_ms, config }
+        Self {
+            current_interval_ms: config.max_quiet_interval_ms,
+            config,
+        }
     }
     pub fn update(&mut self, active: bool) {
         self.current_interval_ms = if active {
@@ -254,7 +270,9 @@ impl AcquisitionEngine {
             data: data.clone(),
             confidence: confidence_for(sensor_type, &data),
         };
-        let active = self.activity.is_active(&event, self.config.activity_threshold);
+        let active = self
+            .activity
+            .is_active(&event, self.config.activity_threshold);
         self.duty_cycler.update(active);
         self.sample_count += 1;
         if let Ok(mut bus) = self.event_bus.lock() {

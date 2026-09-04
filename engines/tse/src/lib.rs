@@ -29,7 +29,12 @@ pub struct Twin {
 
 impl Twin {
     pub fn empty(updated_ms: u128) -> Self {
-        Self { schema: 1, baselines: Vec::new(), anomalies: Vec::new(), updated_ms }
+        Self {
+            schema: 1,
+            baselines: Vec::new(),
+            anomalies: Vec::new(),
+            updated_ms,
+        }
     }
     pub fn to_bytes(&self) -> Result<Vec<u8>, TwinError> {
         serde_json::to_vec(self).map_err(|e| TwinError::Snapshot(e.to_string()))

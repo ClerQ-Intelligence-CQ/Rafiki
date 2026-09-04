@@ -31,7 +31,13 @@ pub struct StreamBaseline {
 
 impl StreamBaseline {
     pub fn cold(feature: &str) -> Self {
-        Self { feature: feature.to_string(), mean: 0.0, variance: 0.0, samples: 0, trusted: false }
+        Self {
+            feature: feature.to_string(),
+            mean: 0.0,
+            variance: 0.0,
+            samples: 0,
+            trusted: false,
+        }
     }
     /// Welford online update. Returns the z-distance of the new sample
     /// from the prior baseline (before absorbing it).

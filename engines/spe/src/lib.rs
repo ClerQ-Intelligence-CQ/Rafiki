@@ -105,7 +105,11 @@ struct Rolling {
 
 impl Rolling {
     fn new(cap: usize) -> Self {
-        Self { buf: VecDeque::with_capacity(cap), cap, missing: 0 }
+        Self {
+            buf: VecDeque::with_capacity(cap),
+            cap,
+            missing: 0,
+        }
     }
     fn push(&mut self, v: f32) {
         if self.buf.len() == self.cap {
@@ -201,7 +205,8 @@ impl Processor {
                 if self.gps_trail.len() == LONG_WIN {
                     self.gps_trail.pop_front();
                 }
-                self.gps_trail.push_back((g.latitude, g.longitude, g.accuracy_m.max(0.0)));
+                self.gps_trail
+                    .push_back((g.latitude, g.longitude, g.accuracy_m.max(0.0)));
             }
             SensorData::Barometer(b) => {
                 let alt = 44330.0 * (1.0 - (b.pressure_hpa / 1013.25).powf(1.0 / 5.255));
@@ -248,8 +253,15 @@ impl Processor {
     fn extract(&mut self) -> Vec<Feature> {
         let mut out = Vec::with_capacity(30);
         let mag = self.accel_mag.clean();
-        let tail: Vec<f32> =
-            mag.iter().rev().take(SHORT_WIN).copied().collect::<Vec<_>>().into_iter().rev().collect();
+        let tail: Vec<f32> = mag
+            .iter()
+            .rev()
+            .take(SHORT_WIN)
+            .copied()
+            .collect::<Vec<_>>()
+            .into_iter()
+            .rev()
+            .collect();
         let comp = self.accel_mag.completeness();
         let m = mean(&tail);
         let v = variance(&tail, m);
@@ -260,8 +272,15 @@ impl Processor {
             }
         }
         let zcr = zc as f32 / tail.len().max(1) as f32;
-        let buf64: Vec<f32> =
-            mag.iter().rev().take(64).copied().collect::<Vec<_>>().into_iter().rev().collect();
+        let buf64: Vec<f32> = mag
+            .iter()
+            .rev()
+            .take(64)
+            .copied()
+            .collect::<Vec<_>>()
+            .into_iter()
+            .rev()
+            .collect();
         let mut band = 0usize;
         let mut band_mag = -1.0f32;
         for (i, f) in BANDS.iter().enumerate() {
@@ -301,8 +320,15 @@ impl Processor {
         self.family_counts[0] += 1;
 
         let env = self.pre_mic_clean();
-        let etail: Vec<f32> =
-            env.iter().rev().take(SHORT_WIN).copied().collect::<Vec<_>>().into_iter().rev().collect();
+        let etail: Vec<f32> = env
+            .iter()
+            .rev()
+            .take(SHORT_WIN)
+            .copied()
+            .collect::<Vec<_>>()
+            .into_iter()
+            .rev()
+            .collect();
         let ecomp = self.mic_env.completeness();
         let em = mean(&etail);
         let ev = variance(&etail, em);
@@ -394,8 +420,15 @@ impl Processor {
         let win_s = (trail.len().max(1) as f64) * 0.05;
         let disp_rate = (disp / win_s.max(1e-6)) as f32;
         let alts = self.alt.clean();
-        let atail: Vec<f32> =
-            alts.iter().rev().take(SHORT_WIN).copied().collect::<Vec<_>>().into_iter().rev().collect();
+        let atail: Vec<f32> = alts
+            .iter()
+            .rev()
+            .take(SHORT_WIN)
+            .copied()
+            .collect::<Vec<_>>()
+            .into_iter()
+            .rev()
+            .collect();
         let am = mean(&atail);
         let avar = variance(&atail, am);
         let arate = if atail.len() > 1 {
@@ -403,7 +436,11 @@ impl Processor {
         } else {
             0.0
         };
-        let dwell = if disp_rate < 0.5 { 1.0 } else { (1.0 - disp_rate / 5.0).max(0.0) };
+        let dwell = if disp_rate < 0.5 {
+            1.0
+        } else {
+            (1.0 - disp_rate / 5.0).max(0.0)
+        };
         let gcomp = (trail.len() as f32 / SHORT_WIN as f32).min(1.0);
         for (name, value) in [
             ("gps.displacement_rate", disp_rate),
@@ -451,11 +488,19 @@ impl Processor {
     }
 
     fn class(&self, kind: &'static str, label: &'static str, confidence: f32) -> Classification {
-        Classification { kind, label, confidence: confidence.clamp(0.0, 1.0) }
+        Classification {
+            kind,
+            label,
+            confidence: confidence.clamp(0.0, 1.0),
+        }
     }
 
     fn get(feats: &[Feature], name: &str) -> f32 {
-        feats.iter().find(|f| f.name == name).map(|f| f.value).unwrap_or(0.0)
+        feats
+            .iter()
+            .find(|f| f.name == name)
+            .map(|f| f.value)
+            .unwrap_or(0.0)
     }
 
     fn classify(&self, feats: &[Feature]) -> Vec<Classification> {
