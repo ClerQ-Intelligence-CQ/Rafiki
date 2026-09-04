@@ -1,0 +1,16 @@
+[package]
+name = "rafiki-tambua"
+version.workspace = true
+edition.workspace = true
+authors.workspace = true
+license.workspace = true
+description = "Rafiki Tambua: anomaly detection engine, public re-anchor of the Baraqiel convergence pipeline"
+
+[dependencies]
+serde = { workspace = true }
+thiserror = { workspace = true }
+rafiki-spe = { path = "../spe" }
+
+[dev-dependencies]
+rafiki-sae = { path = "../sae" }
+rafiki-fikiri = { path = "../fikiri" }

@@ -229,6 +229,10 @@ impl FikiriEngine {
         self.numerics.get(feature).map(|(w, _, _)| w.stability())
     }
 
+    pub fn numeric_full(&self, feature: &str) -> Option<(f32, f32, f32)> {
+        self.numerics.get(feature).map(|(w, _, _)| (w.mean(), w.variance(), w.stability()))
+    }
+
     pub fn numerics_len(&self) -> usize {
         self.numerics.len()
     }
