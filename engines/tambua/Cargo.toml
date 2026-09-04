@@ -1,0 +1,15 @@
+[package]
+name = "rafiki-tambua"
+version.workspace = true
+edition.workspace = true
+authors.workspace = true
+license.workspace = true
+description = "Rafiki Tambua: baseline engine, public re-anchor of the Penemue baseline pipeline"
+
+[dependencies]
+serde = { workspace = true }
+thiserror = { workspace = true }
+rafiki-spe = { path = "../spe" }
+
+[dev-dependencies]
+rafiki-sae = { path = "../sae" }
