@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Rafiki course: glossary</title>
+<style>
+body{font-family:Georgia,serif;max-width:46em;margin:2em auto;padding:0 1em;line-height:1.8;color:#222}
+h1{font-family:Verdana,sans-serif}
+.t{position:relative;border-bottom:1px dotted #060;cursor:help;white-space:nowrap}
+.t::after{content:attr(data-d);display:none;position:absolute;left:0;bottom:130%;width:16em;white-space:normal;background:#222;color:#fff;padding:.5em .7em;border-radius:6px;font-size:.9em;line-height:1.4;z-index:5}
+.t:hover::after,.t.pin::after{display:block}
+li{margin:.3em 0}
+img.logo{max-width:280px}
+footer{margin-top:2em;color:#555;font-size:.9em}
+@media print{.t::after{display:none}}
+</style>
+</head>
+<body>
+<img class="logo" src="../../assets/rafiki-logo.jpg" alt="Rafiki - a digital twin">
+<h1>Glossary (hover any term)</h1>
+<p>Tap a term on touch screens to pin its definition. Full versions in Module 01.</p>
+<ul id="terms"></ul>
+<h2>Check yourself (3 questions)</h2>
+<div id="quiz"></div>
+<p id="score"></p>
+<p><a href="../00-orientation/checklist.html">Back to orientation</a></p>
+<footer>A ClerQ Intelligence research initiative. Built with Nama Labs proprietary AI infrastructure.</footer>
+<script>
+var G=[
+["Sensor","Hardware that measures the world: accelerometer, GPS, barometer, microphone, screen."],
+["Event","One timestamped reading. Streams of events feed everything downstream."],
+["Feature","A computed number over a window of events, e.g. mean or variance."],
+["Baseline","What a feature normally looks like for this person: running mean and variance."],
+["Stability","How much the baseline can still move, 0 to 1, derived from the data itself."],
+["Deviation","Distance of a live value from its baseline in units of that feature's own variance."],
+["Convergence","Deviations co-occurring across independent sensor families in one window."],
+["Anomaly","A fired convergence: what moved, how far, confidence, since when."],
+["Twin","The compact current snapshot: about 5 kilobytes, not a history."],
+["Duty cycling","Sampling fast when active, slow when quiet, to protect the battery."],
+["Offline-first","No network calls after setup."],
+["Deterministic","Same input, same output, no sampling luck."],
+["Welford","Online algorithm for running mean and variance in constant memory."],
+["Window","A recent slice of the stream (short: seconds, long: minutes) that features compute over."],
+["Completeness","Share of tracked features with live, non-stale data right now."],
+["Staleness","A feature whose data stopped arriving longer ago than the horizon."],
+["Liveness","Whether a sensor stream is currently reporting at all."],
+["Confidence","Per-event or per-output quality score derived from signal quality."],
+["No ML","No models, no training, no frameworks. Closed-form statistics only."],
+["Cold start","Day one with no data. Solved by deriving stability from evidence, never a fixed day count."]
+];
+var ul=document.getElementById("terms");
+G.forEach(function(g){
+  var li=document.createElement("li");
+  var s=document.createElement("span");
+  s.className="t";s.tabIndex=0;s.textContent=g[0];s.setAttribute("data-d",g[1]);
+  s.onclick=function(){var p=s.className.indexOf("pin")>=0;s.className="t"+(p?"":" pin");};
+  li.appendChild(s);ul.appendChild(li);
+});
+var quiz=[
+ {q:"What does the twin store?",opts:["Every raw reading ever","Current state only, kilobytes","Population averages"],a:1},
+ {q:"When does an anomaly fire?",opts:["Any single spike","Multi-signal convergence","Once a day"],a:1},
+ {q:"How is cold start solved?",opts:["Fixed 30 days","Stability derived from data","It is not solved"],a:1}
+];
+(function(){
+  var box=document.getElementById("quiz");
+  quiz.forEach(function(item){
+    var d=document.createElement("div");d.innerHTML="<p><b>"+item.q+"</b></p>";
+    item.opts.forEach(function(opt,i){
+      var b=document.createElement("button");b.textContent=opt;
+      b.onclick=function(){
+        Array.prototype.forEach.call(d.getElementsByTagName("button"),function(x){x.disabled=true;});
+        b.style.color=(i===item.a)?"green":"red";
+        var s=document.getElementById("score");
+        s.textContent="Answered: "+document.querySelectorAll("#quiz button:disabled").length+" of 3";
+      };
+      d.appendChild(b);
+    });
+    box.appendChild(d);
+  });
+})();
+</script>
+</body>
+</html>

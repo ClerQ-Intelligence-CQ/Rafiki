@@ -1,5 +1,7 @@
 # Rafiki
 
+<img src="assets/rafiki-logo.jpg" alt="Rafiki - a digital twin" width="360">
+
 > "friend" in Swahili
 
 [![license](https://img.shields.io/badge/license-Apache--2.0-blue.svg)](LICENSE)

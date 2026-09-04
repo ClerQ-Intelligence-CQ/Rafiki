@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Rafiki course: orientation checklist</title>
+<style>
+body{font-family:Georgia,serif;max-width:46em;margin:2em auto;padding:0 1em;line-height:1.7;color:#222}
+h1{font-family:Verdana,sans-serif}
+li{margin:.5em 0;list-style:none}
+.done{color:green;text-decoration:line-through}
+button{font-size:.9em;margin-left:.6em;cursor:pointer}
+img.logo{max-width:280px}
+footer{margin-top:2em;color:#555;font-size:.9em}
+@media print{button{display:none}}
+</style>
+</head>
+<body>
+<img class="logo" src="../../assets/rafiki-logo.jpg" alt="Rafiki - a digital twin">
+<h1>Orientation checklist</h1>
+<p>Tick each step as you finish it. Progress saves in this browser only.</p>
+<ol id="list"></ol>
+<p id="score"></p>
+<p><a href="../01-first-principles/guide.md">Next: Module 01</a> (guide opens as text; start there, then come back for its interactive page).</p>
+<footer>A ClerQ Intelligence research initiative. Built with Nama Labs proprietary AI infrastructure.</footer>
+<script>
+var steps=[
+ "Rust installed (rustup.rs)",
+ "cargo --version answers",
+ "Repo cloned",
+ "First simulate run shows sensor events",
+ "Duty line drops to 500ms on quiet",
+ "I know where guide.md, .html, and experiment/ live"
+];
+var done=JSON.parse(localStorage.getItem("rafiki-m00")||"[]");
+var list=document.getElementById("list");
+function render(){
+  list.innerHTML="";
+  steps.forEach(function(s,i){
+    var li=document.createElement("li");
+    var box=document.createElement("input");
+    box.type="checkbox";box.checked=!!done[i];
+    box.onchange=function(){done[i]=box.checked?1:0;localStorage.setItem("rafiki-m00",JSON.stringify(done));render();};
+    li.appendChild(box);
+    var t=document.createElement("span");t.textContent=" "+s;
+    if(done[i])t.className="done";
+    li.appendChild(t);list.appendChild(li);
+  });
+  var n=done.filter(Boolean).length;
+  document.getElementById("score").textContent=n+" of "+steps.length+" done";
+}
+render();
+</script>
+</body>
+</html>
