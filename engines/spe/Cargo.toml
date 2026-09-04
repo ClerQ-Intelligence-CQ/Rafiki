@@ -1,0 +1,13 @@
+[package]
+name = "rafiki-spe"
+version.workspace = true
+edition.workspace = true
+authors.workspace = true
+license.workspace = true
+description = "Rafiki SPE: signal processing engine, public re-anchor of the Chuja feature pipeline"
+
+[dependencies]
+serde = { workspace = true }
+serde_json = { workspace = true }
+thiserror = { workspace = true }
+rafiki-sae = { path = "../sae" }

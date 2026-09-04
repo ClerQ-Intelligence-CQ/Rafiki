@@ -1,0 +1,15 @@
+[package]
+name = "rafiki-sae"
+version.workspace = true
+edition.workspace = true
+authors.workspace = true
+license.workspace = true
+description = "Rafiki SAE: signal acquisition engine, public re-anchor of the Teka acquisition path"
+
+[dependencies]
+serde = { workspace = true }
+rand = { workspace = true }
+thiserror = { workspace = true }
+
+[dev-dependencies]
+rafiki-spe = { path = "../spe" }

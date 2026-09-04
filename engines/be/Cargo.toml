@@ -1,0 +1,12 @@
+[package]
+name = "rafiki-be"
+version.workspace = true
+edition.workspace = true
+authors.workspace = true
+license.workspace = true
+description = "Rafiki BE: baseline engine contracts (adaptive personal baseline). Types and traits; implementation follows validated research."
+
+[dependencies]
+serde = { workspace = true }
+thiserror = { workspace = true }
+rafiki-spe = { path = "../spe" }

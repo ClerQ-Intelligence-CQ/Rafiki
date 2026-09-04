@@ -1,0 +1,13 @@
+[package]
+name = "rafiki-ade"
+version.workspace = true
+edition.workspace = true
+authors.workspace = true
+license.workspace = true
+description = "Rafiki ADE: anomaly detection contracts (multi-signal convergence). Types and traits; implementation follows validated research."
+
+[dependencies]
+serde = { workspace = true }
+thiserror = { workspace = true }
+rafiki-spe = { path = "../spe" }
+rafiki-be = { path = "../be" }
