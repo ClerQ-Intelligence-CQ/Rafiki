@@ -105,7 +105,7 @@ Public research must be readable and useful to someone who was not in the room.
 ## Quickstart
 
 ```
-git clone https://github.com/ClerQ-Intelligence/rafiki
+git clone https://github.com/ClerQ-Intelligence-CQ/Rafiki
 cd rafiki/engines/sae
 cargo run --release --example simulate
 ```
