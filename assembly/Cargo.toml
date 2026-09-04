@@ -1,0 +1,18 @@
+[package]
+name = "rafiki-assembly"
+version.workspace = true
+edition.workspace = true
+authors.workspace = true
+license.workspace = true
+description = "Rafiki assembly: wiring layer for the five forked engines into one standalone public pipeline"
+
+[dependencies]
+serde = { workspace = true }
+thiserror = { workspace = true }
+rafiki-sae = { path = "../engines/sae" }
+rafiki-spe = { path = "../engines/spe" }
+rafiki-fikiri = { path = "../engines/fikiri" }
+rafiki-tambua = { path = "../engines/tambua" }
+rafiki-pacha = { path = "../engines/pacha" }
+
+[dev-dependencies]
