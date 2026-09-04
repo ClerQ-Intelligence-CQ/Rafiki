@@ -1,4 +1,4 @@
-//! Rafiki Tambua: baseline engine.
+//! Rafiki Fikiri: baseline engine.
 //!
 //! Public re-anchor of the Penemue baseline pipeline. Per-feature,
 //! per-individual running baselines over SPE output: decay-weighted
@@ -147,7 +147,7 @@ pub struct BaselineUpdate {
 /// `rafiki_be::BaselineEngine` contract (see the impl block below), so
 /// `be/` stays the interface definition and this crate the implementation.
 #[derive(Debug, Default)]
-pub struct TambuaEngine {
+pub struct FikiriEngine {
     numerics: HashMap<String, (WelfordDecayed, f32, u8)>,
     categories: HashMap<String, CategoryDist>,
     snapshots: HashMap<String, rafiki_be::StreamBaseline>,
@@ -156,7 +156,7 @@ pub struct TambuaEngine {
     pub publishes: u64,
 }
 
-impl TambuaEngine {
+impl FikiriEngine {
     pub fn new() -> Self {
         Self::default()
     }
@@ -244,7 +244,7 @@ impl TambuaEngine {
     }
 }
 
-impl rafiki_be::BaselineEngine for TambuaEngine {
+impl rafiki_be::BaselineEngine for FikiriEngine {
     fn absorb(&mut self, features: &[Feature]) -> Result<(), rafiki_be::BaselineError> {
         let mut out = Vec::new();
         self.absorb_features(features, &mut out);
@@ -333,7 +333,7 @@ mod tests {
 
     #[test]
     fn engine_absorbs_and_reports() {
-        let mut e = TambuaEngine::new();
+        let mut e = FikiriEngine::new();
         let mut out = Vec::new();
         let feats = vec![
             Feature {
@@ -361,7 +361,7 @@ mod tests {
     #[test]
     fn implements_be_contract() {
         use rafiki_be::BaselineEngine;
-        let mut e = TambuaEngine::new();
+        let mut e = FikiriEngine::new();
         let feats = vec![Feature {
             name: "a",
             value: 1.0,

@@ -6,7 +6,7 @@ members = [
     "engines/be",
     "engines/ade",
     "engines/tse",
-    "engines/tambua",
+    "engines/fikiri",
 ]
 
 [workspace.package]
